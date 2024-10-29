@@ -69,7 +69,7 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
 
 /*  第一次做：
  *  1.新建结果链表的头节点,并分配节点
- *  2.不会
+ *  2.不会....
  *
  *
  *  leetcode官方题解:
