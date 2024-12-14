@@ -1,10 +1,33 @@
 // 209.长度最小的子数组
 // Created by Administrator on 2024/12/13.
 // https://leetcode.cn/problems/minimum-size-subarray-sum/
+// https://www.bilibili.com/video/BV1tZ4y1q7XE?spm_id_from=333.788.videopod.sections&vd_source=4c293aa27f67a76d01553a3b9517eaf3
 
+#include <limits.h>
 #include <stdio.h>
 
 #define MIN(a, b) (a < b ? a : b)
+
+
+int minSubArrayLen(int target, int* nums, int numsSize) {
+	int left = 0, sum = 0, result = INT_MAX;
+
+	// 循环控制右边界
+	for (int right = 0; right < numsSize; right++) {
+		sum += nums[right];
+
+		// 若窗口的和满足条件
+		while (sum >= target) {
+			int count = right - left + 1;
+			result = MIN(result, count);
+			// 窗口左边界向右缩并循环判断是否仍然满足条件
+			sum -= nums[left++];
+		}
+	}
+
+	// 若result仍为极大值则整个数组和未达到条件,返回0
+	return result == INT_MAX ? 0 : result;
+}
 
 
 // 第一版:
@@ -43,15 +66,15 @@
 //     // 返回结果
 //     return result;
 // }
-//
-//
-// int main() {
-//     int nums[6] = {2, 3, 1, 2, 4, 3};
-//     printf("%d", minSubArrayLen(7, nums, 6));
-//
-//     return 0;
-// }
-//
+
+
+int main() {
+    int nums[6] = {2, 3, 1, 2, 4, 3};
+    printf("%d", minSubArrayLen(7, nums, 6));
+
+    return 0;
+}
+
 
 
 /*	第一版:
