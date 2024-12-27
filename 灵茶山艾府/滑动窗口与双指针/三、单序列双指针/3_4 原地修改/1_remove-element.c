@@ -1,7 +1,3 @@
-// 反转字符串之二题
-// Created by Administrator on 2024/12/26.
-// https://www.bilibili.com/video/BV1dT411j7NN?spm_id_from=333.788.videopod.sections&vd_source=4c293aa27f67a76d01553a3b9517eaf3
-
 // 27.移除元素
 // Created by Administrator on 2024/11/8.
 // https://leetcode.cn/problems/remove-element/
