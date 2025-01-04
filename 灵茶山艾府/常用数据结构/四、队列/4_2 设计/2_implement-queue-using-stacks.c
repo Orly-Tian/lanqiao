@@ -26,33 +26,82 @@ MyQueue* myQueueCreate() {
 
 // 入队:即为入栈至[入栈]
 void myQueuePush(MyQueue* obj, int x) {
+	// top-1才为栈顶元素的索引值
 	obj->stackIn[obj->stackInTop++] = x;
 }
 
 
 // 出队:先将[入栈]出栈至[出栈],再将[出栈]中已经倒转的元素出栈
-//		应复制一个[入栈]出栈,因为若[入栈]出栈至空栈则不能再继续进行正常的入栈出栈操作
+//		(应复制一个[入栈]出栈,因为若[入栈]出栈至空栈则不能再继续进行正常的入栈出栈操作)
+//		将[入栈]出栈至[出栈]后,再将[出栈]全部出栈至[入栈]
 int myQueuePop(MyQueue* obj) {
-	while (obj->stackInTop) {
-		obj->stackOut[obj->stackOutTop++] = obj->stackIn[obj->stackInTop--];
-	}
+	// 优化:复制栈顶指针,减少对结构体的访问次数
+	int stackInTop = obj->stackInTop;
+	int stackOutTop = obj->stackOutTop;
 
-	return obj->stackOut[obj->stackOutTop--];
+	// 若[出栈]为空,则[入栈]的全部元素出栈至[出栈]
+	if (stackOutTop == 0)
+		while (stackInTop)
+			obj->stackOut[stackOutTop++] = obj->stackIn[--stackInTop];
+
+	// 将[出栈]的栈顶元素出栈,并保存
+	int top = obj->stackOut[--stackOutTop];
+
+	// 将[出栈]中元素重新返回至[入栈]
+	while (stackOutTop > 0)
+		obj->stackIn[stackInTop++] = obj->stackOut[--stackOutTop];
+
+	// 更新两栈的栈顶指针
+	obj->stackInTop = stackInTop;
+	obj->stackOutTop = stackOutTop;
+
+	return top;
 }
 
 
+// 返回队头元素:即将[入栈]出栈至[出栈],返回[出栈]的队头元素
 int myQueuePeek(MyQueue* obj) {
+	/*	方法一:
+	 *		直接使用myQueuePop()函数出栈,取得队头元素并保存
+	 *		再用myQueuePush()函数将队头元素入栈
+	 *		返回所保存的队头元素
+	 */
 
+	// 方法二:
+	//		将myQueuePop()函数重写一边,但是只返回元素并不出栈
+	// 优化:复制栈顶指针,减少对结构体的访问次数
+	int stackInTop = obj->stackInTop;
+	int stackOutTop = obj->stackOutTop;
+
+	// 若[出栈]为空,则[入栈]的全部元素出栈至[出栈]
+	if (stackOutTop == 0)
+		while (stackInTop)
+			obj->stackOut[stackOutTop++] = obj->stackIn[--stackInTop];
+
+	// 返回[出栈]的栈顶元素,不出栈
+	int top = obj->stackOut[stackOutTop - 1];
+
+	// [出栈]全部元素返回至[入栈]
+	while (stackOutTop > 0)
+		obj->stackIn[stackInTop++] = obj->stackOut[--stackOutTop];
+
+	obj->stackInTop = stackInTop;
+	obj->stackOutTop = stackOutTop;
+
+	return top;
 }
 
 
+// 队列的判空操作:若两栈的元素都为空,则队空
 bool myQueueEmpty(MyQueue* obj) {
-
+	return obj->stackInTop == 0 && obj->stackOutTop == 0;
 }
 
 
+// 释放队列:将两栈指针置零
 void myQueueFree(MyQueue* obj) {
-
+	obj->stackInTop = 0;
+	obj->stackOutTop = 0;
 }
 
 
@@ -70,3 +119,61 @@ void myQueueFree(MyQueue* obj) {
  * myQueueFree(obj);
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+// typedef struct {
+//
+// } MyQueue;
+//
+//
+// MyQueue* myQueueCreate() {
+//
+// }
+//
+// void myQueuePush(MyQueue* obj, int x) {
+//
+// }
+//
+// int myQueuePop(MyQueue* obj) {
+//
+// }
+//
+// int myQueuePeek(MyQueue* obj) {
+//
+// }
+//
+// bool myQueueEmpty(MyQueue* obj) {
+//
+// }
+//
+// void myQueueFree(MyQueue* obj) {
+//
+// }
+//
+// /**
+//  * Your MyQueue struct will be instantiated and called as such:
+//  * MyQueue* obj = myQueueCreate();
+//  * myQueuePush(obj, x);
+//
+//  * int param_2 = myQueuePop(obj);
+//
+//  * int param_3 = myQueuePeek(obj);
+//
+//  * bool param_4 = myQueueEmpty(obj);
+//
+//  * myQueueFree(obj);
+// */
+//
+//
