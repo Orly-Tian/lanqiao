@@ -24,7 +24,7 @@ int **result, resultTop;
 void backtrackting(int n, int k, int start) {
 	// 若路径长度等于组合数的长度，则已经到达叶子节点，即找到了目标组合数
 	if (pathTop == k) {
-		// 将当前组合数加入到result
+		// 将当前组合数通过深拷贝加入到result
 		int *temp = (int *)malloc(k * sizeof(int));
 		for (int i = 0; i < k; i++)
 			temp[i] = path[i];
@@ -51,7 +51,7 @@ int** combine(int n, int k, int* returnSize, int** returnColumnSizes) {
 	pathTop = resultTop = 0;
 
 	backtrackting(n, k, 1);
-	
+
 	// 二维数组长度为resultTop的值
 	*returnSize = resultTop;
 	*returnColumnSizes = (int *)malloc((*returnSize) * sizeof(int));
